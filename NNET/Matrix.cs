@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NNET
 {
-    class Matrix
+    public class Matrix
     {
         float[,] values;
-        public Size size;
+        public Vector2Int size;
         public float max;
         public Point maxID;
 
         public static Matrix operator *(Matrix a, float b)
         {
-            Matrix m = new Matrix(a.size.Width, a.size.Height);
-            for(int x = 0; x < a.size.Width; x++)
-                for(int y = 0; y < a.size.Height; y++)
+            Matrix m = new Matrix(a.size.x, a.size.y);
+            for(int x = 0; x < a.size.x; x++)
+                for(int y = 0; y < a.size.y; y++)
                 {
                     m.values[x, y] = a.values[x,y] * b;
                 }
@@ -27,9 +24,9 @@ namespace NNET
 
         public static Matrix operator /(Matrix a, float b)
         {
-            Matrix m = new Matrix(a.size.Width, a.size.Height);
-            for (int x = 0; x < a.size.Width; x++)
-                for (int y = 0; y < a.size.Height; y++)
+            Matrix m = new Matrix(a.size.x, a.size.y);
+            for (int x = 0; x < a.size.x; x++)
+                for (int y = 0; y < a.size.y; y++)
                 {
                     m.values[x, y] = a.values[x, y] / b;
                 }
@@ -39,9 +36,9 @@ namespace NNET
         public static Matrix operator -(Matrix a, Matrix b)
         {
             if (a.size != b.size) return new Matrix(0, 0);
-            Matrix m = new Matrix(a.size.Width, a.size.Height);
-            for(int x = 0; x < a.size.Width; x++)
-                for(int y = 0; y < a.size.Height; y++)
+            Matrix m = new Matrix(a.size.x, a.size.y);
+            for(int x = 0; x < a.size.x; x++)
+                for(int y = 0; y < a.size.y; y++)
                 {
                     m.values[x, y] = a.values[x, y] - b.values[x, y];
                 }
@@ -51,9 +48,9 @@ namespace NNET
         public static Matrix operator +(Matrix a, Matrix b)
         {
             if (a.size != b.size) return new Matrix(0, 0);
-            Matrix m = new Matrix(a.size.Width, a.size.Height);
-            for (int x = 0; x < a.size.Width; x++)
-                for (int y = 0; y < a.size.Height; y++)
+            Matrix m = new Matrix(a.size.x, a.size.y);
+            for (int x = 0; x < a.size.x; x++)
+                for (int y = 0; y < a.size.y; y++)
                 {
                     m.values[x, y] = a.values[x, y] + b.values[x, y];
                 }
@@ -63,9 +60,9 @@ namespace NNET
         public static Matrix operator *(Matrix a, Matrix b)
         {
             if (a.size != b.size) return new Matrix(0, 0);
-            Matrix m = new Matrix(a.size.Width, a.size.Height);
-            for (int x = 0; x < a.size.Width; x++)
-                for (int y = 0; y < a.size.Height; y++)
+            Matrix m = new Matrix(a.size.x, a.size.y);
+            for (int x = 0; x < a.size.x; x++)
+                for (int y = 0; y < a.size.y; y++)
                 {
                     m.values[x,y] = a.values[x, y] * b.values[x, y];
                 }
@@ -74,7 +71,7 @@ namespace NNET
 
         public Matrix(int x, int y)
         {
-            size = new Size(x, y);
+            size = new Vector2Int(x, y);
             values = new float[x, y];
             max = 0;
         }
@@ -83,12 +80,12 @@ namespace NNET
         {
             float highest = float.MinValue;
             values = new float[sizeX, sizeY];
-            size = new Size(sizeX, sizeY);
+            size = new Vector2Int(sizeX, sizeY);
             for(int x = 0; x < sizeX; x++)
             {
                 for(int y = 0; y < sizeY; y++)
                 {
-                    if (posX + x > matrix.size.Width - 1 || posY + y > matrix.size.Height - 1) values[x, y] = 0;
+                    if (posX + x > matrix.size.x - 1 || posY + y > matrix.size.y - 1) values[x, y] = 0;
                     else values[x, y] = matrix.values[posX + x, posY + y];
                     if (values[x, y] > highest)
                     {
@@ -102,11 +99,11 @@ namespace NNET
 
         public Matrix(Bitmap bmp)
         {
-            size = new Size(bmp.Width, bmp.Height);
-            values = new float[size.Width, size.Height];
-            for(int x = 0; x < size.Width; x++)
+            size = new Vector2Int(bmp.Width, bmp.Height);
+            values = new float[size.x, size.y];
+            for(int x = 0; x < size.x; x++)
             {
-                for(int y = 0; y < size.Height; y++)
+                for(int y = 0; y < size.y; y++)
                 {
                     Color c = bmp.GetPixel(x, y);
                     values[x, y] = 1 - (c.R * 0.0039215f + c.G * 0.0039215f + c.B * 0.0039215f)*0.33f;
@@ -117,9 +114,9 @@ namespace NNET
         public void Dot(Matrix other)
         {
             if (other.size != size) return;
-            for(int x = 0; x < size.Width; x++)
+            for(int x = 0; x < size.x; x++)
             {
-                for(int y = 0; y < size.Height; y++)
+                for(int y = 0; y < size.y; y++)
                 {
                     values[x, y] *= other.Get(x, y);
                 }
@@ -130,9 +127,9 @@ namespace NNET
         {
             float o = 0;
             if (other.size != size) return 0;
-            for (int x = 0; x < size.Width; x++)
+            for (int x = 0; x < size.x; x++)
             {
-                for (int y = 0; y < size.Height; y++)
+                for (int y = 0; y < size.y; y++)
                 {
                     o += values[x, y] * other.Get(x, y);
                 }
@@ -143,8 +140,8 @@ namespace NNET
         public float Sum()
         {
             float s = 0;
-            for(int x = 0; x < size.Width; x++)
-                for(int y = 0; y < size.Height; y++)
+            for(int x = 0; x < size.x; x++)
+                for(int y = 0; y < size.y; y++)
                 {
                     s += values[x, y];
                 }
@@ -153,9 +150,9 @@ namespace NNET
 
         public void Relu()
         {
-            for(int x = 0; x < size.Width; x++)
+            for(int x = 0; x < size.x; x++)
             {
-                for(int y = 0; y < size.Height; y++)
+                for(int y = 0; y < size.y; y++)
                 {
                     values[x, y] = NeuralNetwork.Relu(values[x, y]);
                 }
@@ -164,8 +161,8 @@ namespace NNET
 
         public void Sigmoid()
         {
-            for(int x = 0; x < size.Width; x++)
-                for(int y = 0; y < size.Height; y++)
+            for(int x = 0; x < size.x; x++)
+                for(int y = 0; y < size.y; y++)
                 {
                     values[x, y] = NeuralNetwork.Sigmoid(values[x, y]);
                 }
@@ -173,8 +170,8 @@ namespace NNET
 
         public void SigmoidDerivativeA()
         {
-            for (int x = 0; x < size.Width; x++)
-                for (int y = 0; y < size.Height; y++)
+            for (int x = 0; x < size.x; x++)
+                for (int y = 0; y < size.y; y++)
                 {
                     values[x, y] *= 1 - values[x, y];
                 }
@@ -182,9 +179,9 @@ namespace NNET
 
         public void ReluDerivative()
         {
-            for (int x = 0; x < size.Width; x++)
+            for (int x = 0; x < size.x; x++)
             {
-                for (int y = 0; y < size.Height; y++)
+                for (int y = 0; y < size.y; y++)
                 {
                     values[x, y] = NeuralNetwork.ReluDerivative(values[x, y]);
                 }
@@ -193,10 +190,10 @@ namespace NNET
 
         public void AddAt(Matrix matrix, int X, int Y)
         {
-            for (int x = X; x < X + matrix.size.Width; x++)
-                for (int y = Y; y < Y + matrix.size.Height; y++)
+            for (int x = X; x < X + matrix.size.x; x++)
+                for (int y = Y; y < Y + matrix.size.y; y++)
                 {
-                    if (x < size.Width && y < size.Height)
+                    if (x < size.x && y < size.y)
                     {
                         values[x, y] += matrix.values[x - X, y - Y];
                     }
@@ -228,10 +225,10 @@ namespace NNET
 
         public Bitmap ToBitmap()
         {
-            Bitmap bmp = new Bitmap(size.Width, size.Height);
-            for(int x = 0; x < size.Width; x++)
+            Bitmap bmp = new Bitmap(size.x, size.y);
+            for(int x = 0; x < size.x; x++)
             {
-                for(int y = 0; y < size.Height; y++)
+                for(int y = 0; y < size.y; y++)
                 {
                     int color = 0;
                     if (values[x, y] > 1) color = 255;

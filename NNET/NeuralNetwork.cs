@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 
 [System.Serializable]
-public class NeuralNetwork : IComparable<NeuralNetwork>
+class NeuralNetwork : IComparable<NeuralNetwork>
 {
 
     public int[] layers;
