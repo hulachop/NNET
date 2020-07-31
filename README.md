@@ -1,8 +1,4 @@
 # NNET
-Neural network class library for c#\
-\]
+Neural network class library for c#
 
-
-
-
-ghuihu
+work in progress
