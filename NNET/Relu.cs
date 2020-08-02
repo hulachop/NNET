@@ -32,7 +32,7 @@ namespace NNET
 
         public override float Derivative(float applied)
         {
-            if (applied == 0) return 0.01f;
+            if (applied < 0) return 0f;
             else return 1f;
         }
     }

@@ -217,7 +217,7 @@ namespace NNET
             {
                 for(int j = 0; j < y; j++)
                 {
-                    m.values[i, j] = (4 * (float)r.NextDouble()) - 2f;
+                    m.values[i, j] = (2 * (float)r.NextDouble()) - 1f;
                 }
             }
             return m;
