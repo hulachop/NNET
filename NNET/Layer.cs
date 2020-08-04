@@ -8,7 +8,7 @@ namespace NNET
     {
         public datatype inputType { get; protected set; }
         public datatype outputType { get; protected set; }
-        private float baseLR;
+        public float baseLR;
         public ActivationFunction activationFunc { get; protected set; }
         public abstract object Init(object _inputSize, Random rand);
         public abstract object FeedForward(object input);

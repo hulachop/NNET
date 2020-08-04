@@ -193,7 +193,7 @@ namespace NNET
             for (int x = X; x < X + matrix.size.x; x++)
                 for (int y = Y; y < Y + matrix.size.y; y++)
                 {
-                    if (x < size.x && y < size.y)
+                    if (x < size.x && y < size.y && x > -1 && y > -1)
                     {
                         values[x, y] += matrix.values[x - X, y - Y];
                     }

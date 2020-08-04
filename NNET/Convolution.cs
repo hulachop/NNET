@@ -4,17 +4,22 @@ using System.Text;
 
 namespace NNET
 {
+    /// <summary>
+    /// A convolutional layer. Used for spacially relative data.
+    /// </summary>
     class Convolution : Layer
     {
         List<Matrix> input = new List<Matrix>();
         List<Matrix> output = new List<Matrix>();
         List<Matrix> kernels = new List<Matrix>();
+        int kernelNumber;
 
         int stride;
         bool padding;
-        public Convolution(Vector2Int kernelSize, int kernelNumber, int stride, bool padding, ActivationFunction _activationFunc)
+        public Convolution(Vector2Int kernelSize, int _kernelNumber, int stride, bool padding, ActivationFunction _activationFunc)
         {
             activationFunc = _activationFunc;
+            kernelNumber = _kernelNumber;
             inputType = datatype.matriceList;
             outputType = datatype.matriceList;
             for(int i = 0; i < kernelNumber; i++)
@@ -41,7 +46,6 @@ namespace NNET
             }
             return outputSize;
         }
-
         public override object FeedForward(object _input)
         {
             input = _input as List<Matrix>;
@@ -60,7 +64,7 @@ namespace NNET
             int yMoves = (int)((sizeX - kernels[0].size.x + 1) / stride) + 1;
             for (int m = 0; m < input.Count; m++)
             {
-                for (int k = 0; k < kernels.Count; k++)
+                for (int k = 0; k < kernelNumber; k++)
                 {
                     Matrix newMatrix = new Matrix(xMoves, yMoves);
                     for (int x = 0; x < xMoves; x++)
@@ -80,15 +84,36 @@ namespace NNET
         {
             List<Matrix> errors = error as List<Matrix>;
             List<Matrix> newErrors = new List<Matrix>();
-            for(int i = 0; i < input.Count; i++)
+
+            int xOffset = 0, yOffset = 0;
+            if (padding)
+            {
+                xOffset = kernels[0].size.x - 1;
+                yOffset = kernels[0].size.y - 1;
+            }
+
+            for (int i = 0; i < input.Count; i++)
             {
                 Matrix newError = new Matrix(input[i].size.x, input[i].size.y);
-                for(int o = 0; o < output.Count; o++)
+                for(int k = 0; k < kernelNumber; k++)
                 {
-                    int id = (i * output.Count) + o;
-                    output[id] = activationFunc.Derivative()
+                    int id = (i * output.Count) + k;
+                    output[id] = activationFunc.Derivative(output[id]);
+                    errors[id] *= output[id];
+                    Matrix kernelChange;
+                    Matrix errorAdd;
+                    for(int x = 0; x < output[id].size.x; x++)
+                        for(int y = 0; y < output[id].size.y; y++)
+                        {
+                            errorAdd = kernels[id] * errors[id].Get(x,y);
+                            newError.AddAt(errorAdd, (x * stride) - xOffset, (y * stride) - yOffset);
+                            kernelChange = new Matrix(input[i], (x * stride) - xOffset, (y * stride) - yOffset, kernels[id].size.x, kernels[id].size.y);
+                            kernels[id] -= (kernelChange * errors[id].Get(x, y)) * LR * baseLR;
+                        }
                 }
+                newErrors.Add(newError);
             }
+            return newErrors;
         }
     }
 }

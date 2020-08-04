@@ -4,6 +4,9 @@ using System.Text;
 
 namespace NNET
 {
+    /// <summary>
+    /// A regular, fully connected layer.
+    /// </summary>
     public class FullyConnected : Layer
     {
         float[][] weights;
@@ -13,12 +16,13 @@ namespace NNET
         int inputSize;
         int outputSize;
 
-        public FullyConnected(int _outputSize, ActivationFunction _activationFunction)
+        public FullyConnected(int _outputSize, ActivationFunction _activationFunction, float _LR)
         {
             inputType = datatype.vector;
             outputType = datatype.vector;
             activationFunc = _activationFunction;
             outputSize = _outputSize;
+            baseLR = _LR;
         }
 
         public override object Init(object _inputSize, Random rand)
