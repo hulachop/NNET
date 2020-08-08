@@ -61,7 +61,7 @@ namespace NNET
                 yOffset = kernels[0].size.y - 1;
             }
             int xMoves = (int)((sizeX - kernels[0].size.x + 1) / stride) + 1;
-            int yMoves = (int)((sizeX - kernels[0].size.x + 1) / stride) + 1;
+            int yMoves = (int)((sizeY - kernels[0].size.y + 1) / stride) + 1;
             for (int m = 0; m < input.Count; m++)
             {
                 for (int k = 0; k < kernelNumber; k++)
