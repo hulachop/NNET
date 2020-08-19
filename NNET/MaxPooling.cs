@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NNET
 {
-    class MaxPooling : Layer
+    public class MaxPooling : Layer
     {
         Vector2Int poolSize;
         int stride;

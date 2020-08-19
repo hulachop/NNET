@@ -8,11 +8,11 @@ namespace NNET
     {
         bool valid;
         List<Layer> layers = new List<Layer>();
-        CostFunction costFunction;
+        public CostFunction costFunction = new MeanSquared();
         datatype outputType;
-        float LR;
+        public float LR = 1f;
 
-        public Network(object inputSize, Layer[] _layers, CostFunction _costFunction, float _LR)
+        public Network(object inputSize, Layer[] _layers)
         {
             for(int i = 0; i < _layers.Length; i++)
             {
@@ -21,13 +21,17 @@ namespace NNET
             Validate();
             Init(inputSize);
             outputType = layers[layers.Count - 1].outputType;
-            costFunction = _costFunction;
-            LR = _LR;
         }
 
         private void Init(object inputSize)
         {
             Random rand = new Random();
+            if(inputSize.GetType() == typeof(Vector2Int))
+            {
+                List<Vector2Int> newSize = new List<Vector2Int>();
+                newSize.Add(inputSize as Vector2Int);
+                inputSize = newSize;
+            }
             for(int i = 0; i < layers.Count; i++)
             {
                 inputSize = layers[i].Init(inputSize, rand);

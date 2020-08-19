@@ -35,7 +35,7 @@ namespace NNET
 
         public static Matrix operator -(Matrix a, Matrix b)
         {
-            if (a.size != b.size) return new Matrix(0, 0);
+            if (a.size.x != b.size.x || a.size.y != b.size.y) return new Matrix(0, 0);
             Matrix m = new Matrix(a.size.x, a.size.y);
             for(int x = 0; x < a.size.x; x++)
                 for(int y = 0; y < a.size.y; y++)
@@ -47,7 +47,7 @@ namespace NNET
 
         public static Matrix operator +(Matrix a, Matrix b)
         {
-            if (a.size != b.size) return new Matrix(0, 0);
+            if (a.size.x != b.size.x || a.size.y != b.size.y) return new Matrix(0, 0);
             Matrix m = new Matrix(a.size.x, a.size.y);
             for (int x = 0; x < a.size.x; x++)
                 for (int y = 0; y < a.size.y; y++)
@@ -59,7 +59,7 @@ namespace NNET
 
         public static Matrix operator *(Matrix a, Matrix b)
         {
-            if (a.size != b.size) return new Matrix(0, 0);
+            if (a.size.x != b.size.x || a.size.y != b.size.y) return new Matrix(0, 0);
             Matrix m = new Matrix(a.size.x, a.size.y);
             for (int x = 0; x < a.size.x; x++)
                 for (int y = 0; y < a.size.y; y++)
@@ -85,8 +85,10 @@ namespace NNET
             {
                 for(int y = 0; y < sizeY; y++)
                 {
-                    if (posX + x > matrix.size.x - 1 || posY + y > matrix.size.y - 1) values[x, y] = 0;
-                    else values[x, y] = matrix.values[posX + x, posY + y];
+                    int X = posX + x;
+                    int Y = posY + y;
+                    if (X > matrix.size.x - 1 || Y > matrix.size.y - 1 || X < 0 || Y < 0) values[x, y] = 0;
+                    else values[x, y] = matrix.values[X, Y];
                     if (values[x, y] > highest)
                     {
                         highest = values[x, y];

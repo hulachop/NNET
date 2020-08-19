@@ -8,8 +8,8 @@ namespace NNET
     {
         public datatype inputType { get; protected set; }
         public datatype outputType { get; protected set; }
-        public float baseLR;
-        public ActivationFunction activationFunc { get; protected set; } = new Sigmoid();
+        public float baseLR = 1;
+        public ActivationFunction activationFunc { get; set; } = new Sigmoid();
         public abstract object Init(object _inputSize, Random rand);
         public abstract object FeedForward(object input);
         public abstract object Backpropagate(object error, float LR);

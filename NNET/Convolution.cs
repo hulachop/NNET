@@ -7,25 +7,24 @@ namespace NNET
     /// <summary>
     /// A convolutional layer. Used for spacially relative data.
     /// </summary>
-    class Convolution : Layer
+    public class Convolution : Layer
     {
         List<Matrix> input = new List<Matrix>();
         List<Matrix> output = new List<Matrix>();
         List<Matrix> kernels = new List<Matrix>();
         int kernelNumber;
+        Vector2Int kernelSize;
 
         int stride;
         bool padding;
-        public Convolution(Vector2Int kernelSize, int _kernelNumber, int stride, bool padding, ActivationFunction _activationFunc)
+        public Convolution(Vector2Int _kernelSize, int _kernelNumber, int _stride, bool _padding)
         {
-            activationFunc = _activationFunc;
             kernelNumber = _kernelNumber;
+            kernelSize = _kernelSize;
             inputType = datatype.matriceList;
             outputType = datatype.matriceList;
-            for(int i = 0; i < kernelNumber; i++)
-            {
-                kernels.Add(new Matrix(kernelSize.x, kernelSize.y)); // needs work!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            }
+            stride = _stride;
+            padding = _padding;
         }
         public override object Init(object _inputSize, Random rand)
         {
@@ -33,13 +32,19 @@ namespace NNET
             List<Vector2Int> outputSize = new List<Vector2Int>();
             int sizeX = inputSize[0].x;
             float sizeY = inputSize[0].y;
+
+            for(int i = 0; i < inputSize.Count * kernelNumber; i++)
+            {
+                kernels.Add(Matrix.RandomMatrix(kernelSize.x, kernelSize.y, rand));
+            }
+
             if (padding)
             {
                 sizeX += (kernels[0].size.x * 2) - 2;
                 sizeY += (kernels[0].size.y * 2) - 2;
             }
-            int X = (int)((sizeX - kernels[0].size.x + 1) / stride) + 1;
-            int Y = (int)((sizeY - kernels[0].size.y + 1) / stride) + 1;
+            int X = (int)(((sizeX - kernels[0].size.x + 1) / stride) - 0.0000001f) + 1;
+            int Y = (int)(((sizeY - kernels[0].size.y + 1) / stride) - 0.0000001f) + 1;
             for(int i = 0; i < inputSize.Count * kernels.Count; i++)
             {
                 outputSize.Add(new Vector2Int(X, Y));
@@ -48,6 +53,12 @@ namespace NNET
         }
         public override object FeedForward(object _input)
         {
+            if(_input.GetType() == typeof(Matrix))
+            {
+                List<Matrix> newInput = new List<Matrix>();
+                newInput.Add(_input as Matrix);
+                _input = newInput;
+            }
             input = _input as List<Matrix>;
             output = new List<Matrix>();
             int sizeX = input[0].size.x;
@@ -60,8 +71,8 @@ namespace NNET
                 xOffset = kernels[0].size.x - 1;
                 yOffset = kernels[0].size.y - 1;
             }
-            int xMoves = (int)((sizeX - kernels[0].size.x + 1) / stride) + 1;
-            int yMoves = (int)((sizeY - kernels[0].size.y + 1) / stride) + 1;
+            int xMoves = (int)(((sizeX - kernels[0].size.x + 1) / stride) - 0.0000001f) + 1;
+            int yMoves = (int)(((sizeY - kernels[0].size.y + 1) / stride) - 0.0000001f) + 1;
             for (int m = 0; m < input.Count; m++)
             {
                 for (int k = 0; k < kernelNumber; k++)
@@ -108,7 +119,7 @@ namespace NNET
                             errorAdd = kernels[id] * errors[id].Get(x,y);
                             newError.AddAt(errorAdd, (x * stride) - xOffset, (y * stride) - yOffset);
                             kernelChange = new Matrix(input[i], (x * stride) - xOffset, (y * stride) - yOffset, kernels[id].size.x, kernels[id].size.y);
-                            kernels[id] -= (kernelChange * errors[id].Get(x, y)) * LR * baseLR;
+                            kernels[id] -= (kernelChange * errors[id].Get(x, y)) * (LR * baseLR);
                         }
                 }
                 newErrors.Add(newError);
