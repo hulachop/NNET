@@ -16,13 +16,11 @@ namespace NNET
         int inputSize;
         int outputSize;
 
-        public FullyConnected(int _outputSize, ActivationFunction _activationFunction, float _LR)
+        public FullyConnected(int _outputSize)
         {
             inputType = datatype.vector;
             outputType = datatype.vector;
-            activationFunc = _activationFunction;
             outputSize = _outputSize;
-            baseLR = _LR;
         }
 
         public override object Init(object _inputSize, Random rand)
@@ -34,7 +32,7 @@ namespace NNET
             weights = new float[outputSize][];
             for(int i = 0; i < outputSize; i++)
             {
-                biases[i] = (float)rand.NextDouble();
+                biases[i] = 0;
                 weights[i] = new float[inputSize];
                 for(int j = 0; j < inputSize; j++)
                 {
@@ -64,14 +62,18 @@ namespace NNET
         {
             float[] error = _error as float[];
             float[] newError = new float[inputSize];
+            output = activationFunc.Derivative(output);
+            for(int i = 0; i < error.Length; i++)
+            {
+                error[i] *= output[i];
+            }
             for(int j = 0; j < inputSize; j++)
             {
                 for(int i = 0; i < outputSize; i++)
                 {
-                    float con = error[i] * activationFunc.Derivative(output[i]);
-                    newError[j] += weights[i][j] * con;
-                    weights[i][j] -= con * input[j] * LR;
-                    biases[i] -= con * LR;
+                    newError[j] += weights[i][j] * error[i];
+                    weights[i][j] -= error[i] * input[j] * LR * baseLR;
+                    biases[i] -= error[i] * LR * baseLR;
                 }
             }
             return newError;
