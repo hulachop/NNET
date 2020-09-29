@@ -4,6 +4,7 @@ using System.Text;
 
 namespace NNET
 {
+    [Serializable]
     public class Sigmoid : ActivationFunction
     {
         public override float Apply(float value)

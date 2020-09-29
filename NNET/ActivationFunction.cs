@@ -4,9 +4,13 @@ using System.Text;
 
 namespace NNET
 {
+    [Serializable]
     public abstract class ActivationFunction
     {
-        public abstract float Apply(float value);
+        public virtual float Apply(float value)
+        {
+            return 1;
+        }
         public virtual float[] Apply(float[] layer)
         {
             float[] output = new float[layer.Length];
@@ -32,7 +36,10 @@ namespace NNET
             }
             return output;
         }
-        public abstract float Derivative(float applied);
+        public virtual float Derivative(float applied)
+        {
+            return 1;
+        }
         public virtual Matrix Derivative(Matrix applied)
         {
             for(int x = 0; x < applied.size.x; x++)

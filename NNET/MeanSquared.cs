@@ -4,6 +4,7 @@ using System.Text;
 
 namespace NNET
 {
+    [Serializable]
     public class MeanSquared : CostFunction
     {
         public override float Cost(object _expectedOutput, object _predictedOutput, datatype dt)

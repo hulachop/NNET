@@ -4,6 +4,7 @@ using System.Text;
 
 namespace NNET
 {
+    [Serializable]
     public class MaxPooling : Layer
     {
         Vector2Int poolSize;
@@ -27,7 +28,7 @@ namespace NNET
                     {
                         Matrix slice = new Matrix(input[i], x * stride, y * stride, poolSize.x, poolSize.y);
                         Matrix errorAdd = new Matrix(slice.size.x, slice.size.y);
-                        errorAdd.Set(slice.maxID.X, slice.maxID.Y, error[i].Get(x, y));
+                        errorAdd.Set(slice.maxID.x, slice.maxID.y, error[i].Get(x, y));
                         newError.AddAt(errorAdd, x * stride, y * stride);
                     }
                 }

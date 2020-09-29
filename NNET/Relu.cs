@@ -4,6 +4,7 @@ using System.Text;
 
 namespace NNET
 {
+    [Serializable]
     public class Relu : ActivationFunction
     {
         public override float Apply(float value)

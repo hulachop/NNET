@@ -7,6 +7,7 @@ namespace NNET
     /// <summary>
     /// A regular, fully connected layer.
     /// </summary>
+    [Serializable]
     public class FullyConnected : Layer
     {
         float[][] weights;
@@ -30,13 +31,13 @@ namespace NNET
             output = new float[outputSize];
             biases = new float[outputSize];
             weights = new float[outputSize][];
-            for(int i = 0; i < outputSize; i++)
+            for (int i = 0; i < outputSize; i++)
             {
                 biases[i] = 0;
                 weights[i] = new float[inputSize];
-                for(int j = 0; j < inputSize; j++)
+                for (int j = 0; j < inputSize; j++)
                 {
-                    weights[i][j] = (float)(rand.NextDouble())-0.5f;
+                    weights[i][j] = (float)(rand.NextDouble()) - 0.5f;
                 }
             }
             return outputSize;

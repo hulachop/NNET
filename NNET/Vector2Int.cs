@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace NNET
 {
+    [Serializable]
     public class Vector2Int
     {
         public int x;

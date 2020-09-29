@@ -4,6 +4,7 @@ using System.Text;
 
 namespace NNET
 {
+    [Serializable]
     public abstract class Layer
     {
         public datatype inputType { get; protected set; }

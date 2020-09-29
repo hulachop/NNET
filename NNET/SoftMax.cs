@@ -4,13 +4,9 @@ using System.Text;
 
 namespace NNET
 {
+    [Serializable]
     class SoftMax : ActivationFunction
     {
-        public override float Apply(float value)
-        {
-            return 1;
-        }
-
         public override float[] Apply(float[] layer)
         {
             float[] output = new float[layer.Length];

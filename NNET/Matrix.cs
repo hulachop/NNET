@@ -4,12 +4,13 @@ using System.Drawing;
 
 namespace NNET
 {
+    [Serializable]
     public class Matrix
     {
         float[,] values;
         public Vector2Int size;
         public float max;
-        public Point maxID;
+        public Vector2Int maxID;
 
         public static Matrix operator *(Matrix a, float b)
         {
@@ -92,7 +93,7 @@ namespace NNET
                     if (values[x, y] > highest)
                     {
                         highest = values[x, y];
-                        maxID = new Point(x, y);
+                        maxID = new Vector2Int(x, y);
                     }
                 }
             }
@@ -148,46 +149,6 @@ namespace NNET
                     s += values[x, y];
                 }
             return s;
-        }
-
-        public void Relu()
-        {
-            for(int x = 0; x < size.x; x++)
-            {
-                for(int y = 0; y < size.y; y++)
-                {
-                    values[x, y] = NeuralNetwork.Relu(values[x, y]);
-                }
-            }
-        }
-
-        public void Sigmoid()
-        {
-            for(int x = 0; x < size.x; x++)
-                for(int y = 0; y < size.y; y++)
-                {
-                    values[x, y] = NeuralNetwork.Sigmoid(values[x, y]);
-                }
-        }
-
-        public void SigmoidDerivativeA()
-        {
-            for (int x = 0; x < size.x; x++)
-                for (int y = 0; y < size.y; y++)
-                {
-                    values[x, y] *= 1 - values[x, y];
-                }
-        }
-
-        public void ReluDerivative()
-        {
-            for (int x = 0; x < size.x; x++)
-            {
-                for (int y = 0; y < size.y; y++)
-                {
-                    values[x, y] = NeuralNetwork.ReluDerivative(values[x, y]);
-                }
-            }
         }
 
         public void AddAt(Matrix matrix, int X, int Y)

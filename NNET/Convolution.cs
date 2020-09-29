@@ -5,8 +5,9 @@ using System.Text;
 namespace NNET
 {
     /// <summary>
-    /// A convolutional layer. Used for spacially relative data.
+    /// A convolution layer. Used for spacially relative data.
     /// </summary>
+    [Serializable]
     public class Convolution : Layer
     {
         List<Matrix> input = new List<Matrix>();
@@ -33,7 +34,7 @@ namespace NNET
             int sizeX = inputSize[0].x;
             float sizeY = inputSize[0].y;
 
-            for(int i = 0; i < inputSize.Count * kernelNumber; i++)
+            for (int i = 0; i < inputSize.Count * kernelNumber; i++)
             {
                 kernels.Add(Matrix.RandomMatrix(kernelSize.x, kernelSize.y, rand));
             }

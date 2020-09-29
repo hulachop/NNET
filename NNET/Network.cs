@@ -1,29 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
 namespace NNET
 {
+    [Serializable]
     public class Network
     {
-        bool valid;
-        List<Layer> layers = new List<Layer>();
+        public List<Layer> layers = new List<Layer>();
         public CostFunction costFunction = new MeanSquared();
         datatype outputType;
-        public float LR = 1f;
+        object inputSize;
 
-        public Network(object inputSize, Layer[] _layers)
+        public Network(object _inputSize, Layer[] _layers)
         {
             for(int i = 0; i < _layers.Length; i++)
             {
                 layers.Add(_layers[i]);
             }
+            inputSize = _inputSize;
             Validate();
-            Init(inputSize);
+            Init();
             outputType = layers[layers.Count - 1].outputType;
         }
 
-        private void Init(object inputSize)
+        private void Init()
         {
             Random rand = new Random();
             if(inputSize.GetType() == typeof(Vector2Int))
@@ -47,7 +50,7 @@ namespace NNET
             return input;
         }
 
-        public object BackPropagate(object input, object expectedOutput)
+        public object Backpropagate(object input, object expectedOutput, float LR)
         {
             object error = costFunction.Derivative(expectedOutput, FeedForward(input), outputType);
             for(int i = layers.Count-1; i > -1; i--)
@@ -57,7 +60,26 @@ namespace NNET
             return error;
         }
 
-        private void Validate()
+        public object BackpropagateRaw(object output, object expectedOutput, float LR)
+        {
+            object error = costFunction.Derivative(expectedOutput, output, outputType);
+            for (int i = layers.Count - 1; i > -1; i--)
+            {
+                error = layers[i].Backpropagate(error, LR);
+            }
+            return error;
+        }
+
+        public object BackpropagateRaw(object error, float LR)
+        {
+            for (int i = layers.Count - 1; i > -1; i--)
+            {
+                error = layers[i].Backpropagate(error, LR);
+            }
+            return error;
+        }
+
+        private bool Validate()
         {
             for(int i = 1; i < layers.Count; i++)
             {
@@ -69,12 +91,43 @@ namespace NNET
                     }
                     else
                     {
-                        valid = false;
-                        return;
+                        return false;
                     }
                 }
             }
-            valid = true;
+            return true;
+        }
+
+
+        public void AddLayer(Layer layer)
+        {
+            layers.Add(layer);
+            if (!Validate()) layers.RemoveAt(layers.Count - 1);
+            else Init();
+        }
+
+        public void InsertLayer(Layer layer, int index)
+        {
+            layers.Insert(index, layer);
+            if (!Validate()) layers.RemoveAt(index);
+            else Init();
+        }
+
+        public static void Save(Network net, string path)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Create);
+            formatter.Serialize(stream, net);
+            stream.Close();
+        }
+
+        public static Network Load(string path)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+            Network output = formatter.Deserialize(stream) as Network;
+            stream.Close();
+            return output;
         }
     }
 }

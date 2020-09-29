@@ -4,6 +4,7 @@ using System.Text;
 
 namespace NNET
 {
+    [Serializable]
     public class FlattenLayer : Layer
     {
         List<Vector2Int> inputSize;
