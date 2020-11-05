@@ -9,16 +9,16 @@ namespace NNET
     {
         public Network encoder;
         public Network decoder;
-        public float[] bottleneck;
+        public Vector bottleneck;
         public AutoEncoder(Network _encoder, Network _decoder)
         {
             encoder = _encoder;
             decoder = _decoder;
         }
 
-        public float[] Encode(object input)
+        public Vector Encode(object input)
         {
-            return encoder.FeedForward(input) as float[];
+            return encoder.FeedForward(input) as Vector;
         }
 
         public object Decode(float[] input)
@@ -28,14 +28,14 @@ namespace NNET
 
         public object FeedForward(object input)
         {
-            bottleneck = encoder.FeedForward(input) as float[];
+            bottleneck = encoder.FeedForward(input) as Vector;
             return decoder.FeedForward(bottleneck);
         }
 
         public object Backpropagate(object input, float LR)
         {
             object output = FeedForward(input);
-            object errors = decoder.BackpropagateRaw(output, input, LR) as float[];
+            object errors = decoder.BackpropagateRaw(output, input, LR) as Vector;
             errors = encoder.BackpropagateRaw(errors, LR);
             return errors;
         }

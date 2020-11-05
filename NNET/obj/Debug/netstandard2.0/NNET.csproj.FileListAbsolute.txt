@@ -1,0 +1,10 @@
+C:\Users\pawel\source\repos\NNET\NNET\bin\Debug\netstandard2.0\NNET.deps.json
+C:\Users\pawel\source\repos\NNET\NNET\bin\Debug\netstandard2.0\NNET.dll
+C:\Users\pawel\source\repos\NNET\NNET\obj\Debug\netstandard2.0\NNET.AssemblyInfoInputs.cache
+C:\Users\pawel\source\repos\NNET\NNET\obj\Debug\netstandard2.0\NNET.AssemblyInfo.cs
+C:\Users\pawel\source\repos\NNET\NNET\bin\Debug\netstandard2.0\NNET.pdb
+C:\Users\pawel\source\repos\NNET\NNET\obj\Debug\netstandard2.0\NNET.dll
+C:\Users\pawel\source\repos\NNET\NNET\obj\Debug\netstandard2.0\NNET.pdb
+C:\Users\pawel\source\repos\NNET\NNET\obj\Debug\netstandard2.0\NNET.csprojAssemblyReference.cache
+C:\Users\pawel\source\repos\NNET\NNET\bin\Debug\netstandard2.0\Microsoft.CSharp.dll
+C:\Users\pawel\source\repos\NNET\NNET\obj\Debug\netstandard2.0\NNET.csproj.CopyComplete

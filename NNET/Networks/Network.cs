@@ -10,9 +10,10 @@ namespace NNET
     public class Network
     {
         public List<Layer> layers = new List<Layer>();
-        public CostFunction costFunction = new MeanSquared();
-        datatype outputType;
+        public CostFunction costFunction = new CrossEntropy();
         object inputSize;
+        public float cost;
+        public int costDivider = 0;
 
         public Network(object _inputSize, Layer[] _layers)
         {
@@ -21,9 +22,7 @@ namespace NNET
                 layers.Add(_layers[i]);
             }
             inputSize = _inputSize;
-            Validate();
             Init();
-            outputType = layers[layers.Count - 1].outputType;
         }
 
         private void Init()
@@ -52,8 +51,9 @@ namespace NNET
 
         public object Backpropagate(object input, object expectedOutput, float LR)
         {
-            object error = costFunction.Derivative(expectedOutput, FeedForward(input), outputType);
-            for(int i = layers.Count-1; i > -1; i--)
+            object error = costFunction.Derivative(expectedOutput, FeedForward(input));
+            cost = costFunction.Cost(expectedOutput, FeedForward(input));
+            for (int i = layers.Count-1; i > -1; i--)
             {
                 error = layers[i].Backpropagate(error, LR);
             }
@@ -62,7 +62,8 @@ namespace NNET
 
         public object BackpropagateRaw(object output, object expectedOutput, float LR)
         {
-            object error = costFunction.Derivative(expectedOutput, output, outputType);
+            object error = costFunction.Derivative(expectedOutput, output);
+            cost = costFunction.Cost(expectedOutput, output);
             for (int i = layers.Count - 1; i > -1; i--)
             {
                 error = layers[i].Backpropagate(error, LR);
@@ -77,40 +78,6 @@ namespace NNET
                 error = layers[i].Backpropagate(error, LR);
             }
             return error;
-        }
-
-        private bool Validate()
-        {
-            for(int i = 1; i < layers.Count; i++)
-            {
-                if(layers[i-1].outputType != layers[i].inputType)
-                {
-                    if(layers[i-1].outputType == datatype.matriceList && layers[i].inputType == datatype.vector)
-                    {
-                        layers.Insert(i, new FlattenLayer());
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-
-        public void AddLayer(Layer layer)
-        {
-            layers.Add(layer);
-            if (!Validate()) layers.RemoveAt(layers.Count - 1);
-            else Init();
-        }
-
-        public void InsertLayer(Layer layer, int index)
-        {
-            layers.Insert(index, layer);
-            if (!Validate()) layers.RemoveAt(index);
-            else Init();
         }
 
         public static void Save(Network net, string path)

@@ -9,14 +9,14 @@ namespace NNET
     {
         public override float Apply(float value)
         {
-            value = (float)Math.Exp(value);
+            double value1 = Math.Exp(value);
             if (float.IsNaN((float)value)) throw new Exception();
-            return (float)(value / (value + 1.0));
+            return (float)(value1 / (value1 + 1.0));
         }
 
-        public override float Derivative(float applied)
+        public override float Derivative(float Z)
         {
-            return applied * (1 - applied);
+            return Apply(Z) * (1 - Apply(Z));
         }
     }
 }

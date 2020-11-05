@@ -12,6 +12,15 @@ namespace NNET
         public int x;
         public int y;
 
+        public static implicit operator Vector2Int[](Vector2Int v)
+        {
+            Vector2Int[] vs = new Vector2Int[1];
+            vs[0] = v;
+            return vs;
+        }
+
+        public static implicit operator Vector2Int((int, int) values) => new Vector2Int(values.Item1, values.Item2);
+
         public Vector2Int()
         {
             x = 0;

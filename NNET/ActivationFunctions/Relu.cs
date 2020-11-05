@@ -13,10 +13,10 @@ namespace NNET
             else return value;
         }
 
-        public override float Derivative(float applied)
+        public override float Derivative(float Z)
         {
-            if (applied < 0) return 0f;
-            else return 1f;
+            if (Z < 0) return 0;
+            return 1;
         }
     }
 }
