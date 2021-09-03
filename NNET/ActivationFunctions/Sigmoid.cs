@@ -10,8 +10,13 @@ namespace NNET
         public override float Apply(float value)
         {
             double value1 = Math.Exp(value);
-            if (float.IsNaN((float)value)) throw new Exception();
-            return (float)(value1 / (value1 + 1.0));
+            float value2 = (float)(value1 / (value1 + 1.0));
+            if (float.IsNaN(value2))
+            {
+                if (value > 0) return 1;
+                else return 0;
+            }
+            return value2;
         }
 
         public override float Derivative(float Z)

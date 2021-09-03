@@ -15,7 +15,7 @@ namespace NNET
 
         public override float Derivative(float Z)
         {
-            if (Z < 0) return 0;
+            //if (Z < 0) return 0;
             return 1;
         }
     }

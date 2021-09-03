@@ -26,8 +26,8 @@ namespace NNET
             {
                 for(int j = 0; j < Z.size; j++)
                 {
-                    if (i == j) output[i] -= applied[j] - (applied[j] * applied[i]);
-                    else output[i] -= 0 - (applied[j] * applied[i]);
+                    if (i == j) output[i] += applied[i] * (1-applied[j]);
+                    else output[i] += -(applied[j] * applied[i]);
                 }
             }
             return output;

@@ -21,14 +21,15 @@ namespace NNET
             }
             return cost;
         }
-        public virtual float Cost(Matrix expectedOutput, Matrix predictedOutput)
+        public virtual float Cost(Matrix[] expectedOutput, Matrix[] predictedOutput)
         {
             float cost = 0;
-            for(int i = 0; i < expectedOutput.I; i++)
-                for(int j = 0; j < expectedOutput.J; j++)
-                {
-                    cost += Cost(expectedOutput[i, j], predictedOutput[i, j]);
-                }
+            for(int k = 0; k < expectedOutput.Length; k++)
+                for(int i = 0; i < expectedOutput[k].I; i++)
+                    for(int j = 0; j < expectedOutput[k].J; j++)
+                    {
+                        cost += Cost(expectedOutput[k][i, j], predictedOutput[k][i, j]);
+                    }
             return cost;
         }
         public object Derivative(object expectedOutput, object predictedOutput) => Derivative((dynamic)expectedOutput, (dynamic)predictedOutput);
@@ -42,12 +43,16 @@ namespace NNET
             for (int i = 0; i < v.size; i++) v[i] = (float)Derivative(expectedOutput[i], predictedOutput[i]);
             return v;
         }
-        public virtual object Derivative(Matrix expectedOutput, Matrix predictedOutput)
+        public virtual object Derivative(Matrix[] expectedOutput, Matrix[] predictedOutput)
         {
-            Matrix m = new Matrix(expectedOutput.I, expectedOutput.J);
-            for (int i = 0; i < m.I; i++)
-                for (int j = 0; j < m.J; j++)
-                    m[i, j] = (float)Derivative(expectedOutput[i, j], predictedOutput[i, j]);
+            Matrix[] m = new Matrix[expectedOutput.Length];
+            for(int k = 0; k < m.Length; k++)
+            {
+                m[k] = new Matrix(expectedOutput[k].I, expectedOutput[k].J);
+                    for (int i = 0; i < m[k].I; i++)
+                        for (int j = 0; j < m[k].J; j++)
+                            m[k][i, j] = (float)Derivative(expectedOutput[k][i, j], predictedOutput[k][i, j]);
+            }
             return m;
         }
     }

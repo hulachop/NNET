@@ -9,43 +9,27 @@ namespace NNET
     {
         public float mean = 0f;
         public float deviation = 0.5f;
-        Random rnd = new Random();
-        public RandomInitialization()
-        {
-            deviation = 0.5f;
-        }
-        public RandomInitialization(float _variance)
-        {
-            deviation = _variance;
-        }
-        public RandomInitialization(float _mean, float _variance)
-        {
-            mean = _mean;
-            deviation = _variance;
-        }
-        public RandomInitialization(int inputSize)
+        public override Matrix Initialize(int I, int J, int inputSize, Random rnd)
         {
             deviation = 1 / (float)Math.Sqrt(inputSize);
-        }
-        public override Matrix Initialize(int I, int J)
-        {
             Matrix m = new Matrix(I, J);
             for(int i = 0; i < I; i++)
                 for(int j = 0; j < J; j++)
                 {
-                    m[i, j] = mean + (RandomGaussian() * deviation);
+                    m[i, j] = mean + (RandomGaussian(rnd) * deviation);
                 }
             return m;
         }
 
-        public override Vector Initialize(int I)
+        public override Vector Initialize(int I, int inputSize, Random rnd)
         {
+            deviation = 1 / (float)Math.Sqrt(inputSize);
             Vector v = new Vector(I);
-            for(int i = 0; i < I; i++) v[i] = mean + (RandomGaussian() * deviation);
+            for(int i = 0; i < I; i++) v[i] = mean + (RandomGaussian(rnd) * deviation);
             return v;
         }
 
-        private float RandomGaussian()
+        private float RandomGaussian(Random rnd)
         {
             while(true)
             {

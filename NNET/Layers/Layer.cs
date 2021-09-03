@@ -8,7 +8,7 @@ namespace NNET
     public abstract class Layer
     {
 
-        public float baseLR = 1;
+        public float LR = 1;
         public ActivationFunction activationFunc { get; set; } = new Sigmoid();
         public abstract object Init(object _inputSize, Random rand);
         public abstract object FeedForward(object input);

@@ -113,5 +113,12 @@ namespace NNET
                 }
             return v;
         }
+
+        public static implicit operator Matrix(float[,] f)
+        {
+            Matrix m = new Matrix(f.GetLength(1), f.GetLength(0));
+            for (int i = 0; i < m.I; i++) for (int j = 0; j < m.J; j++) m[i, j] = f[j,i];
+            return m;
+        }
     }
 }
